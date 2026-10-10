@@ -1,4 +1,3 @@
-
 name: Build DON'T BLINK Android APK
 
 on:
@@ -31,7 +30,9 @@ jobs:
           java-version: "17"
 
       - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
+        with:
+          packages: ''
 
       - name: Install Android SDK packages
         run: |
@@ -76,7 +77,10 @@ jobs:
 
       - name: Verify APK
         run: |
-          test -s build/DONT_BLINK.apk
+          if [ ! -s build/DONT_BLINK.apk ]; then
+            echo "::error::APK was not generated."
+            exit 1
+          fi
           ls -lh build/DONT_BLINK.apk
 
       - name: Upload APK artifact
